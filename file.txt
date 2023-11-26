@@ -1,0 +1,30 @@
+from tkinter import *
+from tkinter import filedialog
+from tkinter import messagebox  # Import the messagebox module
+
+def file_open():
+    textarea.delete('1.0', END)
+    path = filedialog.askopenfilename(initialdir='D://C++')
+    
+    if path:
+        try:
+            fh = open(path, 'r')
+            read = fh.read()
+            textarea.insert(END, read)
+            fh.close()
+            # Display a success message
+            messagebox.showinfo("Success", "File uploaded successfully")
+        except Exception as e:
+            # Display an error message if there's an issue with file reading
+            messagebox.showerror("Error", f"Error uploading the file: {e}")
+    else:
+        # Display a message if the user cancels the file dialog
+        messagebox.showinfo("Info", "File selection canceled")
+
+window = Tk()
+window.geometry("600x600")
+button = Button(window, text="Upload File", command=file_open, font=("Times New Roman", 15))
+button.pack(pady=50)
+textarea = Text(window)
+textarea.pack(pady=20)
+window.mainloop()

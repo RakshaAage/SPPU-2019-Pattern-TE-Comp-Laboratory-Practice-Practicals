@@ -1,0 +1,186 @@
+from tkinter import *
+root = Tk()
+root.title("Calculator")
+def add(value):
+    global expression
+    expression = expression + value
+    result.config(text=expression)
+    print(expression)
+
+def clr():
+    global expression
+    expression = ""
+    result.config(text=expression)
+
+def calc():
+    global expression
+    ans = str(eval(expression))
+    expression = ans
+    result.config(text=ans)
+    
+
+expression = ""
+
+result = Label(root, text="")
+result.grid(row=0,column=0,columnspan=4)
+
+button_clr = Button(root, text="C",width=15,command=lambda : clr())
+button_clr.grid(row=1,column=0,columnspan=3)
+
+button_dvd = Button(root, text="/",width=5,command=lambda : add("/"))
+button_dvd.grid(row=1,column=3)
+
+button_1 = Button(root, text="1",width=5,command=lambda : add("1"))
+button_1.grid(row=2,column=0)
+
+button_2 = Button(root, text="2",width=5,command=lambda : add("2"))
+button_2.grid(row=2,column=1)
+
+button_3 = Button(root, text="3",width=5,command=lambda : add("3"))
+button_3.grid(row=2,column=2)
+
+button_mult = Button(root, text="*",width=5,command=lambda : add("*"))
+button_mult.grid(row=2,column=3)
+
+button_4 = Button(root, text="4",width=5,command=lambda : add("4"))
+button_4.grid(row=3,column=0)
+
+button_5 = Button(root, text="5",width=5,command=lambda : add("5"))
+button_5.grid(row=3,column=1)
+
+button_6 = Button(root, text="6",width=5,command=lambda : add("6"))
+button_6.grid(row=3,column=2)
+
+button_add = Button(root, text="+",width=5,command=lambda : add("+"))
+button_add.grid(row=3,column=3)
+
+button_7 = Button(root, text="7",width=5,command=lambda : add("7"))
+button_7.grid(row=4,column=0)
+
+button_8 = Button(root, text="8",width=5,command=lambda : add("8"))
+button_8.grid(row=4,column=1)
+
+button_9 = Button(root, text="9",width=5,command=lambda : add("9"))
+button_9.grid(row=4,column=2)
+
+button_minus = Button(root, text="-",width=5,command=lambda : add("-"))
+button_minus.grid(row=4,column=3)
+
+button_calc = Button(root, text="=",width=15,command=lambda : calc())
+button_calc.grid(row=5,column=0,columnspan=3)
+
+button_pt = Button(root, text=".",width=5,command=lambda : add("."))
+button_pt.grid(row=5,column=3)
+
+root.mainloop()
+
+
+-----------------------------------------
+-----------------------------------------
+OR
+--------------------------------------
+---------------------------------------
+
+from tkinter import *
+import tkinter.font as font
+
+root = Tk()
+
+root.geometry("380x400")
+
+root.title("Calculator")
+
+# Assigning it the capability to 
+# be resizable (It is default)
+root.resizable(0, 0)
+
+# Creating a StringVar to take 
+# the text entered in the Entry widget
+inp = StringVar()
+myFont = font.Font(size=15)
+
+# Creating an Entry widget to get the 
+# mathematical expression
+# And also to display the results
+screen = Entry(root, text=inp, width=30, 
+			justify='right', font=(10), bd=4)
+
+screen.grid(row=0, columnspan=4, padx=15,
+			pady=15, ipady=5)
+
+# Key matrix contains all the required the keys
+key_matrix = [["c", u"\u221A", "/", "<-"], 
+			["7", "8", "9", "*"],
+			["4", "5", "6", "-"], 
+			["1", "2", "3", "+"],
+			["!", 0, ".", "="]]
+
+# Creating a dictionary for the buttons
+btn_dict = {}
+
+# Variable to store our results
+ans_to_print = 0
+
+# Defining the function for calculation
+def Calculate(event):
+
+	# getting the name of the button clicked
+	button = event.widget.cget("text")
+
+	# Referring the global values
+	global key_matrix, inp, ans_to_print
+
+	try:
+		# Event containing a sqrt operation
+		if button == u"\u221A":
+			ans = float(inp.get())**(0.5)
+			ans_to_print = str(ans)
+			inp.set(str(ans))
+
+		elif button == "c": # Clear Button
+			inp.set("")
+
+		elif button == "!": # Factorial
+			def fact(n): return 1 if n == 0 else n*fact(n-1)
+			inp.set(str(fact(int(inp.get()))))
+
+		elif button == "<-": # Backspace
+			inp.set(inp.get()[:len(inp.get())-1])
+
+		elif button == "=": # Showing The Results
+			# Calculating the mathematical exp. using eval
+			ans_to_print = str(eval(inp.get()))
+			inp.set(ans_to_print)
+
+		# You may add many more operations
+
+		else:
+			# Displaying the digit pressed on screen
+			inp.set(inp.get()+str(button))
+
+	except:
+		# In case invalid syntax given in expression
+		inp.set("Wrong Operation")
+
+		
+
+# Creating the buttons using for loop
+
+# Number of rows containing buttons
+for i in range(len(key_matrix)): 
+	# Number of columns 
+	for j in range(len(key_matrix[i])): 
+
+		# Creating and Adding the buttons to dictionary
+		btn_dict["btn_"+str(key_matrix[i][j])] = Button(
+		root, bd=1, text=str(key_matrix[i][j]), font=myFont)
+		
+		# Positioning buttons
+		btn_dict["btn_"+str(key_matrix[i][j])].grid(
+		row=i+1, column=j, padx=5, pady=5, ipadx=5, ipady=5)
+		
+		# Assigning an action to the buttons
+		btn_dict["btn_"+str(key_matrix[i][j])].bind('<Button-1>', Calculate)
+
+# Running the main loop
+root.mainloop()
